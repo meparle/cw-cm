@@ -3,7 +3,7 @@ package impl;
 import spec.Contact;
 
 /**
- * Created by eileen on 01/03/2017.
+ * @author Eileen
  */
 public class ContactImpl implements Contact {
     private int id = 0;
@@ -11,7 +11,7 @@ public class ContactImpl implements Contact {
     private String notes = "";
 
     public ContactImpl (int id, String name, String notes) {
-        if ((id == 0) || (name == null) || (notes == null)) {
+        if ((name == null) || (notes == null)) {
             throw new NullPointerException();
         }
         if (id < 1) {
