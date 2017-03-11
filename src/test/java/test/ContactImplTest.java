@@ -30,6 +30,15 @@ public class ContactImplTest {
     }
 
     @Test
+    public void tests_id_zero() {
+        try {
+            new ContactImpl(0, "Fred", "note sample text");
+            fail ("Expected exception.");
+        } catch (IllegalArgumentException ignored) {
+        }
+    }
+
+    @Test
     public void tests_getId() {
         int input = 2;
         ContactImpl c = new ContactImpl(input, "Ginger");
