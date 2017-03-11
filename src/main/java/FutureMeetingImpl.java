@@ -6,7 +6,7 @@ import java.util.Set;
 public class FutureMeetingImpl extends MeetingImpl implements FutureMeeting {
 
     public FutureMeetingImpl (int id, String date, Set<Contact> contacts) {
-        if ((id == null) || (date == null) || (contacts == null)) { //how to check for contacts set not empty?
+        if ((id == 0) || (date == null) || (contacts == null)) { //how to check for contacts set not empty?
             throw new NullPointerException();
         }
     }

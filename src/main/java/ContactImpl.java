@@ -1,13 +1,13 @@
 /**
  * Created by eileen on 01/03/2017.
  */
-public abstract class ContactImpl implements Contact {
-    int id = "";
-    String name = "";
-    String notes = "";
+public class ContactImpl implements Contact {
+    private int id = 0;
+    private String name = "";
+    private String notes = "";
 
     public ContactImpl (int id, String name, String notes) {
-        if ((id == null) || (name == null) || (notes == null)) {
+        if ((id == 0) || (name == null) || (notes == null)) {
             throw new NullPointerException();
         }
         if (id < 1) {
@@ -16,7 +16,7 @@ public abstract class ContactImpl implements Contact {
     }
 
     public ContactImpl (int id, String name) {
-        if ((id == null) || (name == null)) {
+        if ((id == 0) || (name == null)) {
             throw new NullPointerException();
         }
         if (id < 1) {
@@ -24,15 +24,15 @@ public abstract class ContactImpl implements Contact {
         }
     }
 
-    int getId() {
+    public int getId() {
         return id;
     }
 
-    String getName() {
+    public String getName() {
         return name;
     }
 
-    String getNotes() {
+    public String getNotes() {
         if (notes == null) {
             return "";
         } else {
@@ -40,7 +40,7 @@ public abstract class ContactImpl implements Contact {
         }
     }
 
-    void addNotes(String note) {
+    public void addNotes(String note) {
         notes = notes + note;
     }
 }
