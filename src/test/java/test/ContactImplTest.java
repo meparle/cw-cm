@@ -1,12 +1,14 @@
-package test; /**
- * Created by eileen on 01/03/2017.
- */
+package test;
+
 import impl.ContactImpl;
 import org.junit.*;
 
 import static com.sun.tools.internal.ws.wsdl.parser.Util.fail;
 import static org.junit.Assert.*;
 
+/**
+ * @author Eileen
+ */
 public class ContactImplTest {
 
     @Test
@@ -14,7 +16,7 @@ public class ContactImplTest {
         try {
             new ContactImpl(12345, null);
             fail("Expected exception.");
-        } catch (NullPointerException expected) {
+        } catch (NullPointerException ignored) {
         }
     }
 
@@ -23,7 +25,7 @@ public class ContactImplTest {
         try {
             new ContactImpl(-2, "Fred", "note sample text");
             fail ("Expected exception.");
-        } catch (IllegalArgumentException expected) {
+        } catch (IllegalArgumentException ignored) {
         }
     }
 
@@ -57,6 +59,24 @@ public class ContactImplTest {
         ContactImpl c = new ContactImpl(2, "Ginger", "Productive Meeting");
         String output = c.getName();
         String expected = "Ginger";
+        assertEquals(expected, output);
+    }
+
+    @Test
+    public void tests_addNotes() {
+        ContactImpl c = new ContactImpl(2, "Ginger", "Productive Meeting");
+        c.addNotes("Definitely a buy");
+        String output = c.getNotes();
+        String expected = "Productive MeetingDefinitely a buy";
+        assertEquals(expected, output);
+    }
+
+    @Test
+    public void tests_addNotes_empty() {
+        ContactImpl c = new ContactImpl(2, "Ginger");
+        c.addNotes("Definitely a buy");
+        String output = c.getNotes();
+        String expected = "Definitely a buy";
         assertEquals(expected, output);
     }
 }
