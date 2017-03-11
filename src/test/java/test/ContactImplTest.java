@@ -51,4 +51,12 @@ public class ContactImplTest {
         String expected = "Productive Meeting";
         assertEquals(expected, output);
     }
+
+    @Test
+    public void tests_getName() {
+        ContactImpl c = new ContactImpl(2, "Ginger", "Productive Meeting");
+        String output = c.getName();
+        String expected = "Ginger";
+        assertEquals(expected, output);
+    }
 }

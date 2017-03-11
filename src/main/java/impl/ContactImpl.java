@@ -18,6 +18,7 @@ public class ContactImpl implements Contact {
             throw new IllegalArgumentException();
         }
         this.id = id;
+        this.notes = notes;
     }
 
     public ContactImpl (int id, String name) {
