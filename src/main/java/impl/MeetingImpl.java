@@ -1,3 +1,8 @@
+package impl;
+
+import spec.Contact;
+import spec.Meeting;
+
 import java.util.Calendar;
 import java.util.Set;
 

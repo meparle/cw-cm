@@ -1,3 +1,7 @@
+package impl;
+
+import spec.Contact;
+
 /**
  * Created by eileen on 01/03/2017.
  */
@@ -13,15 +17,11 @@ public class ContactImpl implements Contact {
         if (id < 1) {
             throw new IllegalArgumentException();
         }
+        this.id = id;
     }
 
     public ContactImpl (int id, String name) {
-        if ((id == 0) || (name == null)) {
-            throw new NullPointerException();
-        }
-        if (id < 1) {
-            throw new IllegalArgumentException();
-        }
+        this(id, name, "");
     }
 
     public int getId() {

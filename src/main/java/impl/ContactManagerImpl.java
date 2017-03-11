@@ -1,12 +1,15 @@
-/**
+package impl; /**
  * Created by eileen on 01/03/2017.
- * @InheritDoc ContactManager
+ * @InheritDoc spec.ContactManager
  */
-import java.util.Calendar;
-import java.util.Set;
-import java.util.List;
 
-public class ContactManagerImpl implements ContactManager{
+import spec.*;
+
+import java.util.Calendar;
+import java.util.List;
+import java.util.Set;
+
+public class ContactManagerImpl implements ContactManager {
     private int maxContactId = 0;
     private int maxMeetingId = 0;
 

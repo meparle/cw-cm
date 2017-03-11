@@ -1,3 +1,8 @@
+package impl;
+
+import spec.Contact;
+import spec.FutureMeeting;
+
 import java.util.Set;
 
 /**
