@@ -1,10 +1,10 @@
 package test;
 
 import impl.ContactImpl;
-import org.junit.*;
+import org.junit.Test;
 
-import static com.sun.tools.internal.ws.wsdl.parser.Util.fail;
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.fail;
 
 /**
  * @author Eileen

@@ -1,22 +1,31 @@
-package test; /**
- * Created by eileen on 04/03/2017.
- */
+package test;
+
+import impl.ContactManagerImpl;
 import org.junit.Test;
+import spec.Contact;
 
 import java.util.Calendar;
-import static org.junit.Assert.fail;
-import static org.junit.Assert.*;
+import java.util.HashSet;
+import java.util.Set;
 
+import static org.junit.Assert.fail;
+
+/**
+ * @author Eileen
+ */
 public class ContactManagerImplTest {
 
     @Test
     public void test_addNewPastMeeting() {
-//        Calendar cal = Calendar.getInstance();
-//        try {
-////            addNewPastMeeting([Bob, Jane],cal + month, "asdfjkl")
-//            fail();
-//        } catch (NullPointerException expected) {
-//        }
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, 1);
+        ContactManagerImpl cmi = new ContactManagerImpl();
+        try {
+            Set<Contact> contacts = new HashSet<>();
+            cmi.addNewPastMeeting(contacts, cal,"asdfjkl");
+            fail();
+        } catch (IllegalArgumentException ignored) {
+        }
     }
 
     @Test
