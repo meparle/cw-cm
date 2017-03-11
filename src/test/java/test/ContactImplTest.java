@@ -35,4 +35,20 @@ public class ContactImplTest {
         int expected = 2;
         assertEquals(expected, output);
     }
+
+    @Test
+    public void tests_getNotes_empty() {
+        ContactImpl c = new ContactImpl(2, "Ginger");
+        String output = c.getNotes();
+        String expected = "";
+        assertEquals(expected, output);
+    }
+
+    @Test
+    public void tests_getNotes() {
+        ContactImpl c = new ContactImpl(2, "Ginger", "Productive Meeting");
+        String output = c.getNotes();
+        String expected = "Productive Meeting";
+        assertEquals(expected, output);
+    }
 }
