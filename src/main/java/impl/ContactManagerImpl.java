@@ -3,6 +3,7 @@ package impl;
 import spec.*;
 
 import java.util.Calendar;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -76,7 +77,14 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public Set<Contact> getContacts(String name) {
-        //find contact in set, return it
+//        Set<Contact> contacts = new HashSet<>(); //need to read contacts from file.io
+//        Set<Contact> retrievedContacts = new HashSet<>();
+//        for (ContactImpl x in Set<Contact> contacts) {
+//            if (x.getName() == name) {
+//                retrievedContacts.add(x);
+//            }
+//        }
+//        return retrievedContacts;
         return null;
     }
 
