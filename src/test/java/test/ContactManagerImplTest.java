@@ -73,9 +73,18 @@ public class ContactManagerImplTest {
         cmi.addNewContact("Marilyn","A successful lady");
         cmi.addNewContact("Bob","This is the other Bob");
         Set<Contact> output = cmi.getContacts(id);
-        Set<Contact> expected = new HashSet<>();
-        expected.add(new ContactImpl(id,"Bob", "A capital fellow"));
         assertEquals(1, output.size());
+    }
+
+    @Test
+    public void test_getContactsByIds() {
+        ContactManagerImpl cmi = new ContactManagerImpl();
+        int id1 = cmi.addNewContact("Bob","A capital fellow");
+        int id2 = cmi.addNewContact("Walter","A grumpy old man");
+        cmi.addNewContact("Marilyn","A successful lady");
+        cmi.addNewContact("Bob","This is the other Bob");
+        Set<Contact> output = cmi.getContacts(id1,id2);
+        assertEquals(2, output.size());
     }
 
 //    @Test

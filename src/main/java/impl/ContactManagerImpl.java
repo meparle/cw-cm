@@ -68,7 +68,7 @@ public class ContactManagerImpl implements ContactManager {
         if ((name == null) || (notes == null)) {
             throw new NullPointerException();
         }
-        if ((name == "") || (notes == "")) {
+        if ((name.equals("")) || (notes.equals(""))) {
             throw new IllegalArgumentException();
         }
         int id = maxContactId + 1;
@@ -100,9 +100,10 @@ public class ContactManagerImpl implements ContactManager {
             }
         }
         if (result.isEmpty()) {
-            throw new IllegalArgumentException();
-        } if (ids.length > result.size()) {
-            throw new IllegalArgumentException();
+            throw new IllegalArgumentException("No ID provided or invalid ID(s) given.");
+        }
+        if (ids.length > result.size()) {
+            throw new IllegalArgumentException("Invalid ID(s) given.");
         }
         return result;
     }
