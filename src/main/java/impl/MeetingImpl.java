@@ -22,6 +22,7 @@ public abstract class MeetingImpl implements Meeting {
             throw new IllegalArgumentException();
         }
         this.id = id;
+        this.date = date;
     }
 
     public int getId() {
