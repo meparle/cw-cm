@@ -23,6 +23,7 @@ public abstract class MeetingImpl implements Meeting {
         }
         this.id = id;
         this.date = date;
+        this.contacts = contacts;
     }
 
     public int getId() {
