@@ -1,5 +1,6 @@
 package test;
 
+import impl.ContactImpl;
 import impl.PastMeetingImpl;
 import org.junit.Test;
 import spec.Contact;
@@ -49,6 +50,19 @@ public class PastMeetingImplTest {
         PastMeetingImpl testMI = new PastMeetingImpl(1, past, contacts, "Everything's coming up Milhouse");
         Calendar output = testMI.getDate();
         Calendar expected = past;
+        assertEquals(expected, output);
+    }
+
+    @Test
+    public void test_getContacts() {
+        Calendar cal = Calendar.getInstance();
+        Calendar past = cal;
+        past.add(Calendar.MONTH, -1);
+        Set<Contact> contacts = new HashSet<>();
+        contacts.add(new ContactImpl(1,"Bob","A capital fellow"));
+        PastMeetingImpl testMI = new PastMeetingImpl(1, past, contacts, "Everything's coming up Milhouse");
+        Set<Contact> output = testMI.getContacts();
+        Set<Contact> expected = contacts;
         assertEquals(expected, output);
     }
 }
