@@ -1,6 +1,8 @@
 package test;
 
 import impl.ContactManagerImpl;
+import impl.MeetingImpl;
+import impl.PastMeetingImpl;
 import org.junit.Test;
 import spec.Contact;
 
@@ -8,6 +10,7 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
@@ -28,15 +31,7 @@ public class ContactManagerImplTest {
         }
     }
 
-    @Test
-    public void test_didMyNotesGetRecorded() {
-//        Calendar cal = Calendar.getInstance();
-//        String input = "Bob sounds interested.";
-//        impl.MeetingImpl testMI = new impl.PastMeetingImpl(5, cal - month, Bob, input);
-//        String output = testMI.getNotes();
-//        String expected = * + "Bob sounds interested.";
-//        assertEquals(expected, output);
-    }
+
 
 
 }
