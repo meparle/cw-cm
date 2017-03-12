@@ -89,6 +89,7 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public Set<Contact> getContacts(int... ids) {
+
         return null;
     }
 

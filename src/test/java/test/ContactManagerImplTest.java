@@ -67,15 +67,14 @@ public class ContactManagerImplTest {
 
     @Test
     public void test_getContactsById() {
-        Set<Contact> contacts = new HashSet<>();
-        Set<Contact> expected = new HashSet<>();
-        contacts.add(new ContactImpl(1,"Bob","A capital fellow"));
-        contacts.add(new ContactImpl(2,"Walter","A grumpy old man"));
-        contacts.add(new ContactImpl(3,"Marilyn","A successful lady"));
-        contacts.add(new ContactImpl(4,"Bob","This is the other Bob"));
         ContactManagerImpl cmi = new ContactManagerImpl();
+        int id = cmi.addNewContact("Bob","A capital fellow");
+        cmi.addNewContact("Walter","A grumpy old man");
+        cmi.addNewContact("Marilyn","A successful lady");
+        cmi.addNewContact("Bob","This is the other Bob");
         Set<Contact> output = cmi.getContacts(1);
-        expected.add(new ContactImpl(1,"Bob", "A capital fellow"));
+        Set<Contact> expected = new HashSet<>();
+        expected.add(new ContactImpl(id,"Bob", "A capital fellow"));
         assertEquals(expected, output);
     }
 
