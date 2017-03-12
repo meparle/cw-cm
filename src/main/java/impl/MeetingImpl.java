@@ -29,7 +29,6 @@ public abstract class MeetingImpl implements Meeting {
     }
 
     public Calendar getDate() {
-        date.set(2000, 1, 31, 13, 30, 0);
         return date;
     }
 

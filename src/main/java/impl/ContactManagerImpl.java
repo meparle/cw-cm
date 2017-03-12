@@ -1,7 +1,4 @@
-package impl; /**
- * Created by eileen on 01/03/2017.
- * @InheritDoc spec.ContactManager
- */
+package impl;
 
 import spec.*;
 
@@ -9,11 +6,17 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Set;
 
+/**
+ * Created by eileen on 01/03/2017.
+ * @InheritDoc spec.ContactManager
+ */
+
 public class ContactManagerImpl implements ContactManager {
     private int maxContactId = 0;
     private int maxMeetingId = 0;
 
     public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
+//        date.set(2000, 1, 31, 13, 30, 0)
         return 1;
     }
 

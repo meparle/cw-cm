@@ -39,4 +39,16 @@ public class PastMeetingImplTest {
         int expected = 5;
         assertEquals(expected, output);
     }
+
+    @Test
+    public void test_getDate() {
+        Calendar cal = Calendar.getInstance();
+        Calendar past = cal;
+        past.add(Calendar.MONTH, -1);
+        Set<Contact> contacts = new HashSet<>();
+        PastMeetingImpl testMI = new PastMeetingImpl(1, past, contacts, "Everything's coming up Milhouse");
+        Calendar output = testMI.getDate();
+        Calendar expected = past;
+        assertEquals(expected, output);
+    }
 }
