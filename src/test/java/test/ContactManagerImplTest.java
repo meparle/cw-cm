@@ -12,6 +12,7 @@ import java.util.HashSet;
 import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotEquals;
 import static org.junit.Assert.fail;
 
 /**
@@ -50,6 +51,18 @@ public class ContactManagerImplTest {
             fail("Expected exception.");
         } catch (IllegalArgumentException ignored) {
         }
+    }
+
+    @Test
+    public void test_addNewContact() {
+        ContactManagerImpl cmi = new ContactManagerImpl();
+        String name = "Charlie";
+        String notes = "Enjoys slapstick.";
+        int output = cmi.addNewContact(name, notes);
+        name = "Humphrey";
+        notes = "A real gentleman";
+        int expected = cmi.addNewContact(name, notes);
+        assertNotEquals(expected, output);
     }
 
 //    @Test
