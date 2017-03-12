@@ -15,6 +15,7 @@ import java.util.Set;
 public class ContactManagerImpl implements ContactManager {
     private int maxContactId = 0;
     private int maxMeetingId = 0;
+    private Set<Contact> contacts = new HashSet<>();
 
     public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
 //        date.set(2000, 1, 31, 13, 30, 0)
@@ -73,6 +74,7 @@ public class ContactManagerImpl implements ContactManager {
         int id = maxContactId + 1;
         maxContactId = id;
         ContactImpl contact = new ContactImpl(id, name, notes);
+        contacts.add(contact);
         return id;
     }
 
@@ -89,8 +91,20 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public Set<Contact> getContacts(int... ids) {
-
-        return null;
+        Set<Contact> result = new HashSet<>();
+        for (Contact x : contacts) {
+            for (int id : ids) {
+                if (x.getId() == id) { //try to match each contact we have to a contact ID in the array
+                    result.add(x); //reimplement with sorted IDs and binary search and break if lots of IDs
+                }
+            }
+        }
+        if (result.isEmpty()) {
+            throw new IllegalArgumentException();
+        } if (ids.length > result.size()) {
+            throw new IllegalArgumentException();
+        }
+        return result;
     }
 
     public void flush() {
