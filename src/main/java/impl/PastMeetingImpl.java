@@ -16,6 +16,7 @@ public class PastMeetingImpl extends MeetingImpl implements PastMeeting {
         if ((id == 0) || (date == null) || (contacts == null) || (notes == null)) { //how to check for contacts set not empty?
             throw new NullPointerException();
         }
+        this.notes = notes;
     }
 
     public String getNotes() {
