@@ -3,6 +3,7 @@ package impl;
 import spec.Contact;
 import spec.FutureMeeting;
 
+import java.util.Calendar;
 import java.util.Set;
 
 /**
@@ -10,9 +11,7 @@ import java.util.Set;
  */
 public class FutureMeetingImpl extends MeetingImpl implements FutureMeeting {
 
-    public FutureMeetingImpl (int id, String date, Set<Contact> contacts) {
-        if ((id == 0) || (date == null) || (contacts == null)) { //how to check for contacts set not empty?
-            throw new NullPointerException();
-        }
+    public FutureMeetingImpl (int id, Calendar date, Set<Contact> contacts) {
+        super(id, date, contacts);
     }
 }

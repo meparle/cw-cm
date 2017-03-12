@@ -10,21 +10,21 @@ import java.util.Set;
  * Created by eileen on 01/03/2017.
  */
 public abstract class MeetingImpl implements Meeting {
-    private int id;
+    private int id = 1;
     private Calendar date;
     private Set<Contact> contacts;
 
-    public void Meeting (int id, Calendar date, Set<Contact> contacts) {
+    public MeetingImpl (int id, Calendar date, Set<Contact> contacts) {
         if ((id == 0) || (date == null) || (contacts == null)) { //how to check for contacts set not empty?
             throw new NullPointerException();
         }
         if (id < 1) {
             throw new IllegalArgumentException();
         }
+        this.id = id;
     }
 
     public int getId() {
-
         return id;
     }
 

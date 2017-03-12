@@ -13,7 +13,8 @@ public class PastMeetingImpl extends MeetingImpl implements PastMeeting {
     private String notes = "";
 
     public PastMeetingImpl (int id, Calendar date, Set<Contact> contacts, String notes) {
-        if ((id == 0) || (date == null) || (contacts == null) || (notes == null)) { //how to check for contacts set not empty?
+        super(id, date, contacts);
+        if (notes == null) {
             throw new NullPointerException();
         }
         this.notes = notes;
