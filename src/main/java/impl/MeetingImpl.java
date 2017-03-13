@@ -9,7 +9,7 @@ import java.util.Set;
 /**
  * Created by eileen on 01/03/2017.
  */
-public abstract class MeetingImpl implements Meeting {
+public abstract class MeetingImpl implements Meeting, Comparable<MeetingImpl> {
     private int id = 1;
     private Calendar date;
     private Set<Contact> contacts;
@@ -36,5 +36,10 @@ public abstract class MeetingImpl implements Meeting {
 
     public Set<Contact> getContacts() {
         return contacts;
+    }
+
+    @Override
+    public int compareTo(MeetingImpl o) {
+        return date.compareTo(o.date);
     }
 }

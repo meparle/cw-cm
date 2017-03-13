@@ -2,10 +2,7 @@ package impl;
 
 import spec.*;
 
-import java.util.Calendar;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by eileen on 01/03/2017.
@@ -16,6 +13,7 @@ public class ContactManagerImpl implements ContactManager {
     private int maxContactId = 0;
     private int maxMeetingId = 0;
     private Set<Contact> contacts = new HashSet<>();
+    private Set<PastMeeting> pastMeetings = new TreeSet<>();
 
     public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
 //        date.set(2000, 1, 31, 13, 30, 0)
@@ -23,9 +21,18 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public PastMeeting getPastMeeting(int id) {
-
-        return null;
-    }
+        PastMeeting result = null;
+        for (PastMeeting x : pastMeetings) {
+            if (x.getId() == id) {
+                    result = x;
+                    break;
+            }
+        }
+//        if (result == null) {
+//            throw new IllegalArgumentException("No ID provided or invalid ID(s) given.");
+//        }
+        return result;
+        }
 
     public FutureMeeting getFutureMeeting(int id) {
         return null;
@@ -58,7 +65,8 @@ public class ContactManagerImpl implements ContactManager {
         }
         int id = maxMeetingId + 1;
         maxMeetingId = id;
-        MeetingImpl mi = new PastMeetingImpl(id, date, contacts, text);
+        PastMeetingImpl mi = new PastMeetingImpl(id, date, contacts, text);
+        pastMeetings.add(mi);
         return id;
     }
 
