@@ -6,6 +6,7 @@ import impl.MeetingImpl;
 import impl.PastMeetingImpl;
 import org.junit.Test;
 import spec.Contact;
+import spec.PastMeeting;
 
 import java.util.Calendar;
 import java.util.HashSet;
@@ -21,6 +22,18 @@ import static org.junit.Assert.fail;
 public class ContactManagerImplTest {
 
     @Test
+    public void test_getPastMeeting() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        ContactManagerImpl cmi = new ContactManagerImpl();
+        Set<Contact> contacts = new HashSet<>();
+        int id = cmi.addNewPastMeeting(contacts, cal, "Haha business!");
+        String output = cmi.getPastMeeting(id).getNotes();
+        String expected = "Haha business!";
+        assertEquals(output, expected);
+    }
+
+    @Test
     public void test_addNewPastMeetingInFuture() {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, 1);
@@ -31,6 +44,11 @@ public class ContactManagerImplTest {
             fail();
         } catch (IllegalArgumentException ignored) {
         }
+    }
+
+    @Test
+    public void test_addMeetingNotes() {
+      //
     }
 
     @Test

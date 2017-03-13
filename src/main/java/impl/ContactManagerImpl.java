@@ -23,6 +23,7 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public PastMeeting getPastMeeting(int id) {
+
         return null;
     }
 
@@ -31,6 +32,7 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public Meeting getMeeting(int id) {
+        //implement getPastMeeting and getFutureMeeting, then check the date to choose which one
         return null;
     }
 
@@ -61,6 +63,9 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public PastMeeting addMeetingNotes(int id, String text) {
+        //check date vs now, if future get Future Meeting, if past getPastMeeting
+        //use add Notes method
+        //return as Past Meeting
         return null;
     }
 
