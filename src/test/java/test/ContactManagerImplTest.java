@@ -22,6 +22,20 @@ import static org.junit.Assert.fail;
 public class ContactManagerImplTest {
 
     @Test
+    public void test_addNewFutureMeetingUnknownContact() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, 1);
+        ContactManagerImpl cmi = new ContactManagerImpl();
+        try {
+            Set<Contact> contacts = new HashSet<>();
+            cmi.addFutureMeeting(contacts, cal);
+            cmi.getContacts(-1);
+            fail();
+        } catch (IllegalArgumentException ignored) {
+        }
+    }
+
+    @Test
     public void test_addNewFutureMeetinginPast() {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, -1);

@@ -21,9 +21,11 @@ public class ContactManagerImpl implements ContactManager {
             throw new NullPointerException();
         }
         Calendar cal = Calendar.getInstance();
-            if (date.before(cal)) {
+        if (date.before(cal)) {
             throw new IllegalArgumentException();
-        } //same exception if contact unknown
+        } for (Contact x : contacts) {
+            getContacts(x.getId());
+        }
         int id = maxMeetingId + 1;
         maxMeetingId = id;
         FutureMeetingImpl mi = new FutureMeetingImpl(id, date, contacts);
