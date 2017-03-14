@@ -92,7 +92,7 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public Set<Contact> getContacts(String name) {
-//        Set<Contact> contacts = new HashSet<>(); //need to read contacts from file.io
+//        Set<Contact> contacts = new HashSet<>(); //need to add reading contacts from file.io
 //        Set<Contact> retrievedContacts = new HashSet<>();
 //        for (ContactImpl x in Set<Contact> contacts) {
 //            if (x.getName() == name) {
