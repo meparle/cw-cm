@@ -14,10 +14,21 @@ public class ContactManagerImpl implements ContactManager {
     private int maxMeetingId = 0;
     private Set<Contact> contacts = new HashSet<>();
     private Set<PastMeeting> pastMeetings = new TreeSet<>();
+    private Set<FutureMeeting> futureMeetings = new TreeSet<>();
 
     public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
-//        date.set(2000, 1, 31, 13, 30, 0)
-        return 1;
+        if ((contacts == null) || (date == null)) {
+            throw new NullPointerException();
+        }
+        Calendar cal = Calendar.getInstance();
+            if (date.before(cal)) {
+            throw new IllegalArgumentException();
+        } //same exception if contact unknown
+        int id = maxMeetingId + 1;
+        maxMeetingId = id;
+        FutureMeetingImpl mi = new FutureMeetingImpl(id, date, contacts);
+            futureMeetings.add(mi);
+            return id;
     }
 
     public PastMeeting getPastMeeting(int id) {
