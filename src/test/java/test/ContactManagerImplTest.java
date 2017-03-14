@@ -61,6 +61,19 @@ public class ContactManagerImplTest {
     }
 
     @Test
+    public void test_getPastMeetingInFuture() {
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, 1);
+        ContactManagerImpl cmi = new ContactManagerImpl();
+        try {
+            Set<Contact> contacts = new HashSet<>();
+            cmi.addNewPastMeeting(contacts, cal,"asdfjkl");
+            fail();
+        } catch (IllegalStateException ignored) {
+        }
+    }
+
+    @Test
     public void test_addNewPastMeetingInFuture() {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, 1);
