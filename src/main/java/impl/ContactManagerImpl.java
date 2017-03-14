@@ -37,17 +37,14 @@ public class ContactManagerImpl implements ContactManager {
         PastMeeting result = null;
         for (PastMeeting x : pastMeetings) {
             if (x.getId() == id) {
-                    result = x;
-                    break;
-            }
+                result = x;
+            } //need to add IllegalStateException if meeting in past
         }
-//        if (result == null) {
-//            throw new IllegalArgumentException("No ID provided or invalid ID(s) given.");
-//        }
         return result;
-        }
+    }
 
     public FutureMeeting getFutureMeeting(int id) {
+        //same as past meeting but without IllegalStateException
         return null;
     }
 
@@ -75,6 +72,8 @@ public class ContactManagerImpl implements ContactManager {
         Calendar cal = Calendar.getInstance();
         if (date.after(cal)) {
             throw new IllegalArgumentException();
+        }  for (Contact x : contacts) {
+            getContacts(x.getId());
         }
         int id = maxMeetingId + 1;
         maxMeetingId = id;
