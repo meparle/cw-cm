@@ -38,7 +38,10 @@ public class ContactManagerImpl implements ContactManager {
         for (PastMeeting x : pastMeetings) {
             if (x.getId() == id) {
                 result = x;
-            } //need to add IllegalStateException if meeting in future
+            }
+            if (x.getDate().after(Calendar.getInstance())) {
+                throw new IllegalStateException(); //this is clashing with the IAE in add past meeting method
+            }
         }
         return result;
     }
