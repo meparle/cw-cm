@@ -12,9 +12,7 @@ import java.util.Calendar;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotEquals;
-import static org.junit.Assert.fail;
+import static org.junit.Assert.*;
 
 /**
  * @author Eileen
@@ -115,6 +113,19 @@ public class ContactManagerImplTest {
         assertEquals(output, expected);
     }
 
+//    @Test
+//    public void test_getPastMeetingListFor() {
+//        ContactManagerImpl cmi = new ContactManagerImpl();
+//        Calendar cal = Calendar.getInstance();
+//        cal.add(Calendar.MONTH, -1);
+//        Set<Contact> contacts = new HashSet<>();
+//        int cid = cmi.addNewContact("Walter","A grumpy old man");
+//        cmi.addNewPastMeeting(cmi.getContacts(cid), cal,"Meeting 1");
+//        cmi.addNewPastMeeting(cmi.getContacts(cid), cal,"Meeting 2");
+//        cmi.getPastMeetingListFor(cmi.getContacts(cid));
+//
+//    }
+
     @Test
     public void test_addNewPastMeetingInFuture() {
         Calendar cal = Calendar.getInstance();
@@ -190,17 +201,16 @@ public class ContactManagerImplTest {
     @Test
     public void test_GetContactsByName() {
         ContactManagerImpl cmi = new ContactManagerImpl();
-        Set<Contact> contacts = new HashSet<>();
-        contacts.add(new ContactImpl(1,"Bob","A capital fellow"));
-        contacts.add(new ContactImpl(2,"Walter","A grumpy old man"));
-        contacts.add(new ContactImpl(3,"Boberta","A successful lady"));
-        contacts.add(new ContactImpl(4,"Bob","This is the other Bob"));
-        Set<Contact> output = cmi.getContacts("Bob");
+        int id1 = cmi.addNewContact("Bob","A capital fellow");
+        int id2 = cmi.addNewContact("Bob","This is the other Bob");
+        int id3 = cmi.addNewContact("Walter","A grumpy old man");
+        int id4 = cmi.addNewContact("Boberta","A successful lady");
+        Set<Contact> actual = cmi.getContacts("Bob");
         Set<Contact> expected = new HashSet<>();
-        expected.add(new ContactImpl(1,"Bob","A capital fellow"));
-        expected.add(new ContactImpl(4,"Bob","This is the other Bob"));
-        expected.add(new ContactImpl(3,"Boberta","A successful lady"));
-        assertEquals(expected, output);
+        expected.add(new ContactImpl(id1,"Bob","A capital fellow"));
+        expected.add(new ContactImpl(id2,"Bob","This is the other Bob"));
+        expected.add(new ContactImpl(id4,"Boberta","A successful lady"));
+        assertTrue(cmi.compareContacts(actual,expected));
     }
 
 

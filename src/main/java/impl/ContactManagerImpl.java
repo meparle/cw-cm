@@ -6,7 +6,6 @@ import java.util.*;
 
 /**
  * Created by eileen on 01/03/2017.
- * @InheritDoc spec.ContactManager
  */
 
 public class ContactManagerImpl implements ContactManager {
@@ -67,7 +66,7 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public Meeting getMeeting(int id) {
-        Meeting result = null;
+        Meeting result;
         result = getPastMeeting(id);
         if (result == null) {
             result = getFutureMeeting(id);
@@ -128,16 +127,14 @@ public class ContactManagerImpl implements ContactManager {
         return id;
     }
 
-    public Set<Contact> getContacts(String name) {
-//        Set<Contact> contacts = new HashSet<>(); //need to add reading contacts from file.io
-//        Set<Contact> retrievedContacts = new HashSet<>();
-//        for (ContactImpl x in Set<Contact> contacts) {
-//            if (x.getName() == name) {
-//                retrievedContacts.add(x);
-//            }
-//        }
-//        return retrievedContacts;
-        return null;
+    public Set<Contact> getContacts(String name) { //need to add reading contacts from file.io
+        Set<Contact> retrievedContacts = new HashSet<>();
+        for (Contact x : contacts) {
+            if (x.getName().contains(name)) {
+                retrievedContacts.add(x);
+            }
+        }
+        return retrievedContacts;
     }
 
     public Set<Contact> getContacts(int... ids) {
@@ -159,6 +156,41 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public void flush() {
+
+    }
+
+    public boolean compareContacts(Set<Contact> first, Set<Contact> second) {
+        boolean nameresult = false;
+        boolean notesresult = false;
+        boolean result = false;
+        Contact firstContact;
+        Contact secondContact;
+        for (Contact x : first) {
+            int cid = x.getId();
+            for (Contact y : second) {
+                if (y.getId() == cid) {
+                    secondContact = y;
+                    firstContact = x;
+                    if (x.getName().equals(y.getName())) {
+                        nameresult = true;
+                    }
+                    if (x.getNotes().equals(y.getNotes())) {
+                        notesresult = true;
+                    }
+                }
+            }
+        }
+        if (nameresult == notesresult) {
+            result = true;
+        }
+        return result;
+        //pull out each contact in first, check whether another contact with that id value exists in second
+        //if so, compare each field of the contact sharing that id between sets
+        //if each field has an equal value to the other field, then result = true
+//        if (for Contact x : expected) {actual.contains(x);}) {
+//            result = true
+//        if ((for x :actual) {expected.contains(x)}) {
+//            pass = true;
 
     }
 }
