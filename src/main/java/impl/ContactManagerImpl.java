@@ -16,6 +16,13 @@ public class ContactManagerImpl implements ContactManager {
     private Set<PastMeeting> pastMeetings = new TreeSet<>();
     private Set<FutureMeeting> futureMeetings = new TreeSet<>();
 
+    public int convertFutureToPast(Meeting meeting) {
+        if (meeting.getDate().before(Calendar.getInstance()) && futureMeetings.contains(meeting)) {
+            return addNewPastMeeting(meeting.getContacts(), meeting.getDate(), "");
+        }
+        return 0;
+    }
+
     public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
         if ((contacts == null) || (date == null)) {
             throw new NullPointerException();
@@ -40,7 +47,7 @@ public class ContactManagerImpl implements ContactManager {
                 result = x;
             }
             if (futureMeetings.contains(x)) {
-                throw new IllegalStateException(); //this is clashing with the IAE in add past meeting method
+                throw new IllegalStateException();
             }
         }
         return result;
@@ -53,16 +60,21 @@ public class ContactManagerImpl implements ContactManager {
                 result = x;
             }
             if (pastMeetings.contains(x)) {
-                throw new IllegalStateException(); //this is clashing with the IAE in add past meeting method
+                throw new IllegalStateException();
             }
         }
         return result;
     }
 
     public Meeting getMeeting(int id) {
-        //implement getPastMeeting and getFutureMeeting, then check the date to choose which one
-        return null;
+        Meeting result = null;
+        result = getPastMeeting(id);
+        if (result == null) {
+            result = getFutureMeeting(id);
+        }
+        return result;
     }
+
 
     public List<Meeting> getFutureMeetingList(Contact contact) {
         return null;
@@ -94,6 +106,8 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public PastMeeting addMeetingNotes(int id, String text) {
+        //if (result != null) {
+        //    convertFutureToPast(result);
         //check date vs now, if future get Future Meeting, if past getPastMeeting
         //use add Notes method
         //return as Past Meeting
