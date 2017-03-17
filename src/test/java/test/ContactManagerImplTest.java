@@ -127,6 +127,17 @@ public class ContactManagerImplTest {
 //    }
 
     @Test
+    public void test_getPastMeetingListForNull() {
+        try {
+            ContactManagerImpl cmi = new ContactManagerImpl();
+            cmi.getPastMeetingListFor(null);
+            fail("Expected exception.");
+        }
+        catch (NullPointerException ignored) {
+        }
+    }
+
+    @Test
     public void test_addNewPastMeetingInFuture() {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, 1);

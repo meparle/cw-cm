@@ -84,6 +84,19 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public List<PastMeeting> getPastMeetingListFor(Contact contact) {
+        if (contact == null) {
+            throw new NullPointerException();
+        }
+//          try {
+//            if (getContacts(contact.getId())
+//                catch IllegalArgumentException())
+//        }
+
+        //NPE if contact is null
+        //look up contact in set of contacts to check they exist (IAE if not)
+        //go through past meeting list and look in each set of contacts to see if they were in that meeting
+        //if so store the meeting in the list
+        //return list (okay if empty)
         return null;
     }
 
