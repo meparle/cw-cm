@@ -39,7 +39,7 @@ public class ContactManagerImpl implements ContactManager {
             if (x.getId() == id) {
                 result = x;
             }
-            if (x.getDate().after(Calendar.getInstance())) {
+            if (futureMeetings.contains(x)) {
                 throw new IllegalStateException(); //this is clashing with the IAE in add past meeting method
             }
         }
@@ -47,8 +47,16 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public FutureMeeting getFutureMeeting(int id) {
-        //same as past meeting but without IllegalStateException
-        return null;
+        FutureMeeting result = null;
+        for (FutureMeeting x : futureMeetings) {
+            if (x.getId() == id) {
+                result = x;
+            }
+            if (pastMeetings.contains(x)) {
+                throw new IllegalStateException(); //this is clashing with the IAE in add past meeting method
+            }
+        }
+        return result;
     }
 
     public Meeting getMeeting(int id) {

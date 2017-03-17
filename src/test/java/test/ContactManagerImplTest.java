@@ -75,14 +75,14 @@ public class ContactManagerImplTest {
 
     @Test
     public void test_getFutureMeeting() {
-        Calendar cal = Calendar.getInstance();
+        Calendar expected = Calendar.getInstance();
+        Calendar cal = expected;
         cal.add(Calendar.MONTH, 11);
         ContactManagerImpl cmi = new ContactManagerImpl();
         int cid = cmi.addNewContact("Humphrey", "A real gentleman");
         Set<Contact> contacts = cmi.getContacts(cid);
         int mid = cmi.addFutureMeeting(contacts, cal);
         Calendar output = cmi.getFutureMeeting(mid).getDate();
-        Calendar expected = Calendar.getInstance();
         expected.add(Calendar.MONTH, 11);
         assertEquals(output, expected);
     }
