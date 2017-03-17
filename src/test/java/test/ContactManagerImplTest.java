@@ -10,6 +10,7 @@ import spec.PastMeeting;
 
 import java.util.Calendar;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import static org.junit.Assert.*;
@@ -113,18 +114,23 @@ public class ContactManagerImplTest {
         assertEquals(output, expected);
     }
 
-//    @Test
-//    public void test_getPastMeetingListFor() {
-//        ContactManagerImpl cmi = new ContactManagerImpl();
-//        Calendar cal = Calendar.getInstance();
-//        cal.add(Calendar.MONTH, -1);
-//        Set<Contact> contacts = new HashSet<>();
-//        int cid = cmi.addNewContact("Walter","A grumpy old man");
-//        cmi.addNewPastMeeting(cmi.getContacts(cid), cal,"Meeting 1");
-//        cmi.addNewPastMeeting(cmi.getContacts(cid), cal,"Meeting 2");
-//        cmi.getPastMeetingListFor(cmi.getContacts(cid));
-//
-//    }
+    @Test
+    public void test_getPastMeetingListFor() {
+        ContactManagerImpl cmi = new ContactManagerImpl();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, -1);
+        Set<Contact> contacts;
+        int cid = cmi.addNewContact("Walter","A grumpy old man");
+        cmi.addNewPastMeeting(cmi.getContacts(cid), cal,"Meeting 1");
+        cmi.addNewPastMeeting(cmi.getContacts(cid), cal,"Meeting 2");
+        contacts = cmi.getContacts(cid);
+        Contact[] person = contacts.toArray(new Contact[1]);
+        List<PastMeeting> list = cmi.getPastMeetingListFor(person[0]);
+        assertEquals(2, list.size());
+        for (PastMeeting x : list) {
+            assertTrue("Meeting 1".equals(x.getNotes()) || "Meeting 2".equals(x.getNotes()));
+        }
+    }
 
     @Test
     public void test_getPastMeetingListForNull() {

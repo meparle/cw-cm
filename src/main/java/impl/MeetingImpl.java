@@ -40,6 +40,35 @@ public abstract class MeetingImpl implements Meeting, Comparable<MeetingImpl> {
 
     @Override
     public int compareTo(MeetingImpl o) {
+        if (date.equals(o.date)) {
+            if (id > o.id) {
+                return 1;
+            }
+            if (id == o.id) {
+                return 0;
+            }
+            return -1;
+        }
         return date.compareTo(o.date);
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+
+        MeetingImpl meeting = (MeetingImpl) o;
+
+        if (id != meeting.id) return false;
+        if (!date.equals(meeting.date)) return false;
+        return contacts.equals(meeting.contacts);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = id;
+        result = 31 * result + date.hashCode();
+        result = 31 * result + contacts.hashCode();
+        return result;
     }
 }

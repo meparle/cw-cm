@@ -87,17 +87,16 @@ public class ContactManagerImpl implements ContactManager {
         if (contact == null) {
             throw new NullPointerException();
         }
-//          try {
-//            if (getContacts(contact.getId())
-//                catch IllegalArgumentException())
-//        }
-
-        //NPE if contact is null
-        //look up contact in set of contacts to check they exist (IAE if not)
-        //go through past meeting list and look in each set of contacts to see if they were in that meeting
-        //if so store the meeting in the list
-        //return list (okay if empty)
-        return null;
+        Set<PastMeeting> contactMeetings = new HashSet<>();
+        getContacts(contact.getId()); //this will throw IAE if contact not in cmi's contact set
+        for (PastMeeting m : pastMeetings) {
+            Set <Contact> meetingContacts = m.getContacts(); //for a past meeting, who was there
+            if (meetingContacts.contains(contact)) { //if they were there, store that meeting
+                contactMeetings.add(m);
+            }
+        }
+        List<PastMeeting> list = new ArrayList<>(contactMeetings);
+        return list;
     }
 
     public int addNewPastMeeting(Set<Contact> contacts, Calendar date, String text) {
@@ -107,7 +106,8 @@ public class ContactManagerImpl implements ContactManager {
         Calendar cal = Calendar.getInstance();
         if (date.after(cal)) {
             throw new IllegalArgumentException();
-        }  for (Contact x : contacts) {
+        }
+        for (Contact x : contacts) { //double check this
             getContacts(x.getId());
         }
         int id = maxMeetingId + 1;
