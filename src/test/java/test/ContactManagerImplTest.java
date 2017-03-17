@@ -102,6 +102,20 @@ public class ContactManagerImplTest {
     }
 
     @Test
+    public void test_getMeetingFuture() {
+        ContactManagerImpl cmi = new ContactManagerImpl();
+        Calendar cal = Calendar.getInstance();
+        cal.add(Calendar.MONTH, 1);
+        Set<Contact> contacts = new HashSet<>();
+        int cid = cmi.addNewContact("Humphrey", "A real gentleman");
+        contacts = cmi.getContacts(cid);
+        int mid = cmi.addFutureMeeting(contacts, cal);
+        Set <Contact> output = cmi.getMeeting(mid).getContacts();
+        Set <Contact> expected = contacts;
+        assertEquals(output, expected);
+    }
+
+    @Test
     public void test_addNewPastMeetingInFuture() {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, 1);
