@@ -41,13 +41,7 @@ public abstract class MeetingImpl implements Meeting, Comparable<MeetingImpl> {
     @Override
     public int compareTo(MeetingImpl o) {
         if (date.equals(o.date)) {
-            if (id > o.id) {
-                return 1;
-            }
-            if (id == o.id) {
-                return 0;
-            }
-            return -1;
+            return id - o.id;
         }
         return date.compareTo(o.date);
     }

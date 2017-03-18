@@ -17,6 +17,7 @@ public class ContactManagerImpl implements ContactManager {
 
     public int convertFutureToPast(Meeting meeting) {
         if (meeting.getDate().before(Calendar.getInstance()) && futureMeetings.contains(meeting)) {
+            futureMeetings.remove(meeting);
             return addNewPastMeeting(meeting.getContacts(), meeting.getDate(), "");
         }
         return 0;
@@ -76,7 +77,19 @@ public class ContactManagerImpl implements ContactManager {
 
 
     public List<Meeting> getFutureMeetingList(Contact contact) {
-        return null;
+        if (contact == null) {
+            throw new NullPointerException();
+        }
+        Set<Meeting> contactMeetings = new HashSet<>();
+        getContacts(contact.getId());
+        for (FutureMeeting m : futureMeetings) {
+            Set <Contact> meetingContacts = m.getContacts(); //for a past meeting, who was there
+            if (meetingContacts.contains(contact)) { //if they were there, store that meeting
+                contactMeetings.add(m);
+            }
+        }
+        List<Meeting> list = new ArrayList<>(contactMeetings);
+        return list;
     }
 
     public List<Meeting> getMeetingListOn(Calendar date) {
