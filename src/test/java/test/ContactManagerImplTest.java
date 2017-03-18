@@ -2,8 +2,10 @@ package test;
 
 import impl.ContactImpl;
 import impl.ContactManagerImpl;
+import impl.FutureMeetingImpl;
 import org.junit.Test;
 import spec.Contact;
+import spec.FutureMeeting;
 import spec.Meeting;
 import spec.PastMeeting;
 
@@ -239,6 +241,24 @@ public class ContactManagerImplTest {
             }
         catch (IllegalArgumentException ignored) {
             }
+    }
+
+    @Test
+    public void test_addMeetingNotesFutureInPast() {
+        ContactManagerImpl cmi = new ContactManagerImpl();
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.DATE,1);
+        int cid = cmi.addNewContact("Norma", "I'm ready for my close-up");
+        Set<Contact> contacts = cmi.getContacts(cid);
+        int mid = cmi.addFutureMeeting(contacts, date);
+        FutureMeetingImpl theMeeting = (FutureMeetingImpl) cmi.getFutureMeeting(mid);
+        Calendar pastDate = Calendar.getInstance();
+        pastDate.add(Calendar.DATE,-1);
+        theMeeting.setDateForTest(pastDate);
+        //change date of meeting to past? access future meetings and add without using method that throws error?
+        String notes = "I am big,It's the pictures that got small";
+        PastMeeting pastMeeting = cmi.addMeetingNotes(mid, notes);
+        assertEquals("I am big,It's the pictures that got small", pastMeeting.getNotes());
     }
 
     @Test

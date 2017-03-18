@@ -29,6 +29,11 @@ public class PastMeetingImpl extends MeetingImpl implements PastMeeting {
     }
 
     public void addNotes(String newNotes) {
-        notes = notes + "," + newNotes;
+        if (notes.isEmpty()) {
+            notes = newNotes;
+        }
+        else {
+            notes = notes + "," + newNotes;
+        }
     }
 }

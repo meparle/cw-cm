@@ -20,7 +20,7 @@ public class ContactManagerImpl implements ContactManager {
     private Set<PastMeeting> pastMeetings = new TreeSet<>();
     private Set<FutureMeeting> futureMeetings = new TreeSet<>();
 
-    public int convertFutureToPast(Meeting meeting) {
+    private int convertFutureToPast(Meeting meeting) {
         if (meeting.getDate().before(Calendar.getInstance()) && futureMeetings.contains(meeting)) {
             futureMeetings.remove(meeting);
             return addNewPastMeeting(meeting.getContacts(), meeting.getDate(), "");
@@ -233,43 +233,46 @@ public class ContactManagerImpl implements ContactManager {
 
     }
 
-//    public void readContacts() {
-//        ContactManagerImpl cmi = new ContactManagerImpl();
-//        //look for file
-//        try {             //to open file
-//            File file = new File("/Users/eileen/Documents/src/cw-cm/src/main/ContactManagerContacts.csv");
-//            BufferedReader in = new BufferedReader(new FileReader(file));
-//            String line;
-//            String splitBy = ",";
-//            while ((line = in.readLine()) != null) {        //read from file into each field in Contact Manager Contacts
-//                String[] contacts = line.split(splitBy);
-//                //int id, String name, String notes
-//                int cid = Integer.parseInt(contacts[0]);
-//                String name = contacts[1];
-//                String notes = contacts[2];
-//                Calendar cal = Calendar.getInstance();
-//                ContactImpl ci = new ContactImpl(cid, name, notes);
-//                contacts.add(ci);
-//            }
-//        } catch (FileNotFoundException ex) {
-//            File f = null;
-//            f = new File("/Users/eileen/Documents/src/cw-cm/src/main", "ContactManagerContacts.csv");
-//            f.createNewFile();
-//            cmi.readMeetings();
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-//        } finally {
-//            try {
-//                if (in != null) {
-//                    in.close();
-//                }
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
-//        }
-//    }
-//
-//
+    public void readContacts() {
+        ContactManagerImpl cmi = new ContactManagerImpl();
+        //look for file
+        try {             //to open file
+            File file = new File("/Users/eileen/Documents/src/cw-cm/src/main/ContactManagerContacts.csv");
+            BufferedReader in = new BufferedReader(new FileReader(file));
+            String line;
+            String splitBy = ",";
+            while ((line = in.readLine()) != null) {        //read from file into each field in Contact Manager Contacts
+                String[] csvContacts = line.split(splitBy);
+                //int id, String name, String notes
+                int cid = Integer.parseInt(csvContacts[0]);
+                String name = csvContacts[1];
+                String notes = csvContacts[2];
+                Calendar cal = Calendar.getInstance();
+                ContactImpl ci = new ContactImpl(cid, name, notes);
+                contacts.add(ci);
+            }
+        } catch (FileNotFoundException ex) {
+            File f = null;
+            f = new File("/Users/eileen/Documents/src/cw-cm/src/main", "ContactManagerContacts.csv");
+            try {
+                f.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+    }
+
+
 //    public void readMeetings() {
 //        ContactManagerImpl cmi = new ContactManagerImpl();
 //        cmi.readContacts();
@@ -354,7 +357,7 @@ public class ContactManagerImpl implements ContactManager {
 
     }
 
-    public boolean compareCalendars(Calendar cal1, Calendar cal2) {
+    public boolean compareCalendars(Calendar cal1, Calendar cal2) { //to be used in tests
         return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
                 && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)
                 && cal1.get(Calendar.DATE) == cal2.get(Calendar.DATE);

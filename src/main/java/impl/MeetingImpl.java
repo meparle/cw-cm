@@ -38,6 +38,10 @@ public abstract class MeetingImpl implements Meeting, Comparable<MeetingImpl> {
         return contacts;
     }
 
+    public void setDateForTest(Calendar setDate) {
+        date = setDate;
+    }
+
     @Override
     public int compareTo(MeetingImpl o) {
         if (date.equals(o.date)) {
