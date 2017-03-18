@@ -93,6 +93,11 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public List<Meeting> getMeetingListOn(Calendar date) {
+        if (date == null) {
+            throw new NullPointerException();
+        }
+
+        //look for contact in pastMeetings, return list of them
         return null;
     }
 

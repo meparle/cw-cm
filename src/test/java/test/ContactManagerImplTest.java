@@ -112,6 +112,41 @@ public class ContactManagerImplTest {
         assertEquals(output, expected);
     }
 
+
+    @Test
+    public void test_getMeetingListOnNull() {
+        try {
+            ContactManagerImpl cmi = new ContactManagerImpl();
+            cmi.getMeetingListOn(null);
+            fail("Expected exception.");
+        }
+        catch (NullPointerException ignored) {
+        }
+    }
+
+    @Test
+    public void test_getMeetingListOn() {
+        ContactManagerImpl cmi = new ContactManagerImpl();
+        Calendar cal = Calendar.getInstance();
+        Calendar cal1 = cal;
+        cal1.add(Calendar.MONTH, -1);
+        Calendar cal2 = cal;
+        cal2.add(Calendar.MONTH, -2);
+        int cid = cmi.addNewContact("Walter","A grumpy old man");
+        int cid2 = cmi.addNewContact("Orson","Rosebud");
+        cmi.addNewPastMeeting(cmi.getContacts(cid), cal1, "Grumpier");
+        cmi.addNewPastMeeting(cmi.getContacts(cid2), cal1, "Bobo");
+        cmi.addNewPastMeeting(cmi.getContacts(cid,cid2), cal2, "What a twist!");
+        List<Meeting> list = cmi.getMeetingListOn(cal1);
+        assertEquals(2, list.size());
+        for (Meeting x : list) {
+            assertTrue(cal1.equals(x.getDate()));
+            Set<Contact> actual = cmi.getContacts(cid, cid2);
+            Set<Contact> expected = x.getContacts();
+            assertTrue(cmi.compareContacts(actual,expected));
+        }
+    }
+
     @Test
     public void test_getFutureMeetingList() {
         ContactManagerImpl cmi = new ContactManagerImpl();
@@ -130,7 +165,7 @@ public class ContactManagerImplTest {
         assertEquals(2, list.size());
         for (Meeting x : list) {
             assertTrue(cal1.equals(x.getDate()) || cal2.equals(x.getDate()));
-        }
+        } //check date order too!
     }
 
     @Test
