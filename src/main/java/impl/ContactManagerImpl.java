@@ -172,6 +172,13 @@ public class ContactManagerImpl implements ContactManager {
         if (m == null) {
             throw new IllegalArgumentException();
         }
+        if (text == null) {
+            throw new NullPointerException();
+        }
+        Calendar cal = Calendar.getInstance();
+        if (m.getDate().after(cal)) {
+            throw new IllegalStateException();
+        }
         int mid = convertFutureToPast(m);         //check date vs now, if future get Future Meeting, if past getPastMeeting
         //use add Notes method on Past Meeting
         //return as Past Meeting

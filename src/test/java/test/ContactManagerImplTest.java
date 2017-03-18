@@ -223,6 +223,20 @@ public class ContactManagerImplTest {
     }
 
     @Test
+    public void test_addMeetingNotesNull() {
+        ContactManagerImpl cmi = new ContactManagerImpl();
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.MONTH, -1);
+        int cid = cmi.addNewContact("Norma", "I'm ready for my close-up");
+        Set<Contact> contacts = cmi.getContacts(cid);
+        int mid = cmi.addNewPastMeeting(contacts, date, "I am big");
+        try {
+            PastMeeting pastMeeting = cmi.addMeetingNotes(mid, null);
+        } catch (NullPointerException ignored){
+            }
+    }
+
+    @Test
     public void test_addNewContactNulls() {
         try {
             ContactManagerImpl cmi =new ContactManagerImpl();
