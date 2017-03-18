@@ -128,19 +128,18 @@ public class ContactManagerImplTest {
     public void test_getMeetingListOn() {
         ContactManagerImpl cmi = new ContactManagerImpl();
         Calendar cal = Calendar.getInstance();
-        Calendar cal1 = cal;
-        cal1.add(Calendar.MONTH, -1);
-        Calendar cal2 = cal;
+        cal.add(Calendar.MONTH, -1);
+        Calendar cal2 = Calendar.getInstance();
         cal2.add(Calendar.MONTH, -2);
         int cid = cmi.addNewContact("Walter","A grumpy old man");
         int cid2 = cmi.addNewContact("Orson","Rosebud");
-        cmi.addNewPastMeeting(cmi.getContacts(cid), cal1, "Grumpier");
-        cmi.addNewPastMeeting(cmi.getContacts(cid2), cal1, "Bobo");
+        cmi.addNewPastMeeting(cmi.getContacts(cid), cal, "Grumpier");
+        cmi.addNewPastMeeting(cmi.getContacts(cid2), cal, "Bobo");
         cmi.addNewPastMeeting(cmi.getContacts(cid,cid2), cal2, "What a twist!");
-        List<Meeting> list = cmi.getMeetingListOn(cal1);
+        List<Meeting> list = cmi.getMeetingListOn(cal);
         assertEquals(2, list.size());
         for (Meeting x : list) {
-            assertTrue(cal1.equals(x.getDate()));
+            assertTrue(cal.equals(x.getDate()));
             Set<Contact> actual = cmi.getContacts(cid, cid2);
             Set<Contact> expected = x.getContacts();
             assertTrue(cmi.compareContacts(actual,expected));
@@ -212,7 +211,15 @@ public class ContactManagerImplTest {
 
     @Test
     public void test_addMeetingNotes() {
-      //
+        ContactManagerImpl cmi = new ContactManagerImpl();
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.MONTH, -1);
+        int cid = cmi.addNewContact("Norma", "I'm ready for my close-up");
+        Set<Contact> contacts = cmi.getContacts(cid);
+        int mid = cmi.addNewPastMeeting(contacts, date, "I am big");
+        String notes = "It's the pictures that got small";
+        PastMeeting pastMeeting = cmi.addMeetingNotes(mid, notes);
+        assertEquals("I am big,It's the pictures that got small", pastMeeting.getNotes());
     }
 
     @Test

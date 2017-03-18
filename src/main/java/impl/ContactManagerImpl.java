@@ -2,7 +2,12 @@ package impl;
 
 import spec.*;
 
+import java.io.*;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.*;
+
+import static java.lang.System.in;
 
 /**
  * Created by eileen on 01/03/2017.
@@ -20,7 +25,7 @@ public class ContactManagerImpl implements ContactManager {
             futureMeetings.remove(meeting);
             return addNewPastMeeting(meeting.getContacts(), meeting.getDate(), "");
         }
-        return 0;
+        return meeting.getId();
     }
 
     public int addFutureMeeting(Set<Contact> contacts, Calendar date) {
@@ -30,14 +35,15 @@ public class ContactManagerImpl implements ContactManager {
         Calendar cal = Calendar.getInstance();
         if (date.before(cal)) {
             throw new IllegalArgumentException();
-        } for (Contact x : contacts) {
+        }
+        for (Contact x : contacts) {
             getContacts(x.getId());
         }
         int id = maxMeetingId + 1;
         maxMeetingId = id;
         FutureMeetingImpl mi = new FutureMeetingImpl(id, date, contacts);
-            futureMeetings.add(mi);
-            return id;
+        futureMeetings.add(mi);
+        return id;
     }
 
     public PastMeeting getPastMeeting(int id) {
@@ -83,7 +89,7 @@ public class ContactManagerImpl implements ContactManager {
         Set<Meeting> contactMeetings = new HashSet<>();
         getContacts(contact.getId());
         for (FutureMeeting m : futureMeetings) {
-            Set <Contact> meetingContacts = m.getContacts(); //for a past meeting, who was there
+            Set<Contact> meetingContacts = m.getContacts(); //for a past meeting, who was there
             if (meetingContacts.contains(contact)) { //if they were there, store that meeting
                 contactMeetings.add(m);
             }
@@ -96,9 +102,35 @@ public class ContactManagerImpl implements ContactManager {
         if (date == null) {
             throw new NullPointerException();
         }
-
-        //look for contact in pastMeetings, return list of them
-        return null;
+        Set<Meeting> dateMeetings = new HashSet<>();
+        Calendar cal = Calendar.getInstance();
+        if (date.before(cal)) {
+            for (PastMeeting m : pastMeetings) {
+                if (compareCalendars(m.getDate(),date)) {
+                    dateMeetings.add(m);
+                }
+                if (m.getDate().after(cal)) {
+                    break;
+                }//stop searching afterwards
+            }
+            List<Meeting> list = new ArrayList<>(dateMeetings);
+            return list;
+            //pull out each PastMeeting & check date for a match until reach desired date
+            //once PastMeeting goes beyond desired date, stop searching
+        } else {
+            for (FutureMeeting m : futureMeetings) {
+                if (compareCalendars(m.getDate(),date)) {
+                    dateMeetings.add(m);
+                }
+                if (m.getDate().after(cal)) {
+                    break;
+                }//stop searching afterwards
+            }
+            List<Meeting> list = new ArrayList<>(dateMeetings);
+            return list;
+            //pull out each FutureMeeting & check date for a match until reach desired date
+            //once FutureMeeting goes beyond desired date, stop searching
+        }
     }
 
     public List<PastMeeting> getPastMeetingListFor(Contact contact) {
@@ -108,7 +140,7 @@ public class ContactManagerImpl implements ContactManager {
         Set<PastMeeting> contactMeetings = new HashSet<>();
         getContacts(contact.getId()); //this will throw IAE if contact not in cmi's contact set
         for (PastMeeting m : pastMeetings) {
-            Set <Contact> meetingContacts = m.getContacts(); //for a past meeting, who was there
+            Set<Contact> meetingContacts = m.getContacts(); //for a past meeting, who was there
             if (meetingContacts.contains(contact)) { //if they were there, store that meeting
                 contactMeetings.add(m);
             }
@@ -136,12 +168,16 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public PastMeeting addMeetingNotes(int id, String text) {
-        //if (result != null) {
-        //    convertFutureToPast(result);
-        //check date vs now, if future get Future Meeting, if past getPastMeeting
-        //use add Notes method
+        Meeting m = getMeeting(id);
+        if (m == null) {
+            throw new IllegalArgumentException();
+        }
+        int mid = convertFutureToPast(m);         //check date vs now, if future get Future Meeting, if past getPastMeeting
+        //use add Notes method on Past Meeting
         //return as Past Meeting
-        return null;
+        PastMeetingImpl meeting = (PastMeetingImpl) getPastMeeting(mid);
+        meeting.addNotes(text);
+        return meeting;
     }
 
     public int addNewContact(String name, String notes) {
@@ -190,6 +226,92 @@ public class ContactManagerImpl implements ContactManager {
 
     }
 
+//    public void readContacts() {
+//        ContactManagerImpl cmi = new ContactManagerImpl();
+//        //look for file
+//        try {             //to open file
+//            File file = new File("/Users/eileen/Documents/src/cw-cm/src/main/ContactManagerContacts.csv");
+//            BufferedReader in = new BufferedReader(new FileReader(file));
+//            String line;
+//            String splitBy = ",";
+//            while ((line = in.readLine()) != null) {        //read from file into each field in Contact Manager Contacts
+//                String[] contacts = line.split(splitBy);
+//                //int id, String name, String notes
+//                int cid = Integer.parseInt(contacts[0]);
+//                String name = contacts[1];
+//                String notes = contacts[2];
+//                Calendar cal = Calendar.getInstance();
+//                ContactImpl ci = new ContactImpl(cid, name, notes);
+//                contacts.add(ci);
+//            }
+//        } catch (FileNotFoundException ex) {
+//            File f = null;
+//            f = new File("/Users/eileen/Documents/src/cw-cm/src/main", "ContactManagerContacts.csv");
+//            f.createNewFile();
+//            cmi.readMeetings();
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        } finally {
+//            try {
+//                if (in != null) {
+//                    in.close();
+//                }
+//            } catch (IOException ex) {
+//                ex.printStackTrace();
+//            }
+//        }
+//    }
+//
+//
+//    public void readMeetings() {
+//        ContactManagerImpl cmi = new ContactManagerImpl();
+//        cmi.readContacts();
+//        //look for file
+//        try {             //to open file
+//            File file = new File("/Users/eileen/Documents/src/cw-cm/src/main/ContactManagerMeetings.csv");
+//            BufferedReader in = new BufferedReader(new FileReader(file));
+//            String line;
+//            String splitBy = ",";
+//            while ((line = in.readLine()) != null) {        //read from file into each field in Contact Manager Meetings using reader
+//                String[] meetings = line.split(splitBy);
+//                //int id, Calendar date, Set<Contact> contacts, String notes
+//                int mid = Integer.parseInt(meetings[0]);
+//                String csvDate = meetings[1];
+//                DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+//                Date date = format.parse(csvDate);
+//                String csvContacts = meetings[2];
+//                //this is a list of contact IDs as ints, need to look up in Contacts list and add to Set
+//                String notes = meetings[3];
+//                Calendar cal = Calendar.getInstance();
+//                if (date.before(cal)) {
+//                    PastMeetingImpl pmi = new PastMeetingImpl(mid, date, Set <Contact> csvContacts, notes);
+//                    pastMeetings.add(pmi);
+//                } else {
+//                    FutureMeetingImpl fmi = new FutureMeetingImpl(mid, date, Set <Contact> csvContacts);
+//                    futureMeetings.add(fmi);
+//                }
+//            }
+//        }
+//        catch (FileNotFoundException ex) {
+//            File f = null;
+//            System.out.println("File " + f + " does not exist."); //if file does not exist, create file
+//            f = new File("/Users/eileen/Documents/src/cw-cm/src/main", "ContactManagerMeetings.csv");
+//            f.createNewFile();
+//            cmi.readMeetings();
+//        } catch (IOException ex) {
+//            ex.printStackTrace();
+//        }
+//        finally {
+//            try {
+//                if (in != null) {
+//                    in.close();
+//                }
+//            } catch (IOException ex) {
+//                ex.printStackTrace();
+//            }
+//        }
+//    }
+
     public boolean compareContacts(Set<Contact> first, Set<Contact> second) {
         boolean nameresult = false;
         boolean notesresult = false;
@@ -223,5 +345,11 @@ public class ContactManagerImpl implements ContactManager {
 //        if ((for x :actual) {expected.contains(x)}) {
 //            pass = true;
 
+    }
+
+    public boolean compareCalendars(Calendar cal1, Calendar cal2) {
+        return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
+                && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)
+                && cal1.get(Calendar.DATE) == cal2.get(Calendar.DATE);
     }
 }
