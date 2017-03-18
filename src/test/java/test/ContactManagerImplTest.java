@@ -234,6 +234,11 @@ public class ContactManagerImplTest {
             PastMeeting pastMeeting = cmi.addMeetingNotes(mid, null);
         } catch (NullPointerException ignored){
             }
+        try {
+            PastMeeting pastMeeting = cmi.addMeetingNotes(1000,"It's the pictures that got small");
+            }
+        catch (IllegalArgumentException ignored) {
+            }
     }
 
     @Test
