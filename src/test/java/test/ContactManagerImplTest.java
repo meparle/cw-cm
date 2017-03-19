@@ -6,6 +6,7 @@ import impl.FutureMeetingImpl;
 import org.junit.Test;
 import spec.*;
 
+import java.io.File;
 import java.util.Calendar;
 import java.util.HashSet;
 import java.util.List;
@@ -331,8 +332,8 @@ public class ContactManagerImplTest {
 
     @Test
     public void test_flush() {
-        String fileNameM = "/Users/eileen/Documents/src/cw-cm/ContactManagerMeetings.csv";
-        String fileNameC = "/Users/eileen/Documents/src/cw-cm/ContactManagerContacts.csv";
+        String fileNameM = "/tmp/ContactManagerMeetings.csv";
+        String fileNameC = "/tmp/ContactManagerContacts.csv";
         ContactManager cmi = ContactManagerImpl.readMeetings(fileNameM, fileNameC);
         int cid = cmi.addNewContact("Bob","A capital fellow");
         Set<Contact> contacts = cmi.getContacts(cid);
@@ -349,5 +350,7 @@ public class ContactManagerImplTest {
         Contact fellow = person.toArray(new Contact[1])[0];
         assertTrue(ContactManagerImpl.compareCalendars(date,theShow.getDate()));
         assertEquals("Bob",fellow.getName());
+        new File(fileNameC).delete();
+        new File(fileNameM).delete();
     }
 }
