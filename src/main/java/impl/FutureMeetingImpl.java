@@ -7,12 +7,13 @@ import java.util.Calendar;
 import java.util.Set;
 
 /**
- * Created by eileen on 01/03/2017.
+ * Implementation of {@link FutureMeeting}.
+ *
+ * @author Eileen Parle
  */
 public class FutureMeetingImpl extends MeetingImpl implements FutureMeeting {
 
     FutureMeetingImpl(int id, Calendar date, Set<Contact> contacts) {
         super(id, date, contacts);
     }
-
 }

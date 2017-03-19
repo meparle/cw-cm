@@ -7,7 +7,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 
 /**
- * @author Eileen
+ * @author Eileen Parle
  */
 public class ContactImplTest {
 

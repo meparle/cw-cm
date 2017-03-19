@@ -13,7 +13,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
- * Created by eileen on 12/03/2017.
+ * @author Eileen Parle
  */
 public class PastMeetingImplTest {
 
@@ -23,6 +23,7 @@ public class PastMeetingImplTest {
         cal.add(Calendar.MONTH, -1);
         String input = "Bob sounds interested.";
         Set<Contact> contacts = new HashSet<>();
+        contacts.add(new ContactImpl(1, "Bob", "Notes"));
         PastMeetingImpl testMI = new PastMeetingImpl(5, cal, contacts, input);
         String output = testMI.getNotes();
         String expected = "Bob sounds interested.";
@@ -34,6 +35,7 @@ public class PastMeetingImplTest {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, -1);
         Set<Contact> contacts = new HashSet<>();
+        contacts.add(new ContactImpl(1, "Bob", "Notes"));
         int input = 5;
         PastMeetingImpl testMI = new PastMeetingImpl(input, cal, contacts, "Everything's coming up Milhouse");
         int output = testMI.getId();
@@ -46,6 +48,7 @@ public class PastMeetingImplTest {
         Calendar past = Calendar.getInstance();
         past.add(Calendar.MONTH, -1);
         Set<Contact> contacts = new HashSet<>();
+        contacts.add(new ContactImpl(1, "Bob", "Notes"));
         PastMeetingImpl testMI = new PastMeetingImpl(1, past, contacts, "Everything's coming up Milhouse");
         assertEquals(past, testMI.getDate());
     }

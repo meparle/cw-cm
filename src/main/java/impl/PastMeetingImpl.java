@@ -7,12 +7,14 @@ import java.util.Calendar;
 import java.util.Set;
 
 /**
- * Created by eileen on 01/03/2017.
+ * Implementation of {@link PastMeeting}.
+ *
+ * @author Eileen Parle
  */
 public class PastMeetingImpl extends MeetingImpl implements PastMeeting {
     private String notes = "";
 
-    public PastMeetingImpl (int id, Calendar date, Set<Contact> contacts, String notes) {
+    public PastMeetingImpl(int id, Calendar date, Set<Contact> contacts, String notes) {
         super(id, date, contacts);
         if (notes == null) {
             throw new NullPointerException();

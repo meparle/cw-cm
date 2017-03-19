@@ -1,6 +1,5 @@
-package spec; /**
- * Created by eileen on 01/03/2017.
- */
+package spec;
+
 /**
  * A contact is a person we are making business with or may do in the future.
  *

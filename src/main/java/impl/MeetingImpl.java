@@ -7,18 +7,20 @@ import java.util.Calendar;
 import java.util.Set;
 
 /**
- * Created by eileen on 01/03/2017.
+ * Implementation of {@link Meeting}.
+ *
+ * @author Eileen Parle
  */
 public abstract class MeetingImpl implements Meeting, Comparable<MeetingImpl> {
-    private int id = 1;
-    private Calendar date;
-    private Set<Contact> contacts;
+    private final int id;
+    private final Set<Contact> contacts;
+    private Calendar date; // Non-final for test
 
     MeetingImpl(int id, Calendar date, Set<Contact> contacts) {
-        if ((id == 0) || (date == null) || (contacts == null)) { //how to check for contacts set not empty?
+        if ((id == 0) || (date == null) || (contacts == null)) {
             throw new NullPointerException();
         }
-        if (id < 1) {
+        if (id < 1 || contacts.isEmpty()) {
             throw new IllegalArgumentException();
         }
         this.id = id;

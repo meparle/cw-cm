@@ -15,7 +15,7 @@ import java.util.Set;
 import static org.junit.Assert.*;
 
 /**
- * @author Eileen
+ * @author Eileen Parle
  */
 public class ContactManagerImplTest {
 
@@ -51,7 +51,8 @@ public class ContactManagerImplTest {
         Calendar cal = Calendar.getInstance();
         cal.add(Calendar.MONTH, -1);
         ContactManagerImpl cmi = new ContactManagerImpl();
-        Set<Contact> contacts = new HashSet<>();
+        int cid = cmi.addNewContact("Bob", "Notes");
+        Set<Contact> contacts = cmi.getContacts(cid);
         int id = cmi.addNewPastMeeting(contacts, cal, "Haha business!");
         String output = cmi.getPastMeeting(id).getNotes();
         String expected = "Haha business!";
@@ -142,7 +143,7 @@ public class ContactManagerImplTest {
             assertTrue(cal.equals(x.getDate()));
             Set<Contact> actual = cmi.getContacts(cid, cid2);
             Set<Contact> expected = x.getContacts();
-            assertTrue(cmi.compareContacts(actual,expected));
+            assertTrue(compareContacts(actual,expected));
         }
     }
 
@@ -234,13 +235,14 @@ public class ContactManagerImplTest {
         int mid = cmi.addNewPastMeeting(contacts, date, "I am big");
         try {
             PastMeeting pastMeeting = cmi.addMeetingNotes(mid, null);
+            fail();
         } catch (NullPointerException ignored){
-            }
+        }
         try {
             PastMeeting pastMeeting = cmi.addMeetingNotes(1000,"It's the pictures that got small");
-            }
-        catch (IllegalArgumentException ignored) {
-            }
+            fail();
+        } catch (IllegalArgumentException ignored) {
+        }
     }
 
     @Test
@@ -327,30 +329,57 @@ public class ContactManagerImplTest {
         expected.add(new ContactImpl(id1,"Bob","A capital fellow"));
         expected.add(new ContactImpl(id2,"Bob","This is the other Bob"));
         expected.add(new ContactImpl(id4,"Boberta","A successful lady"));
-        assertTrue(cmi.compareContacts(actual,expected));
+        assertTrue(compareContacts(actual,expected));
     }
 
     @Test
     public void test_flush() {
         String fileNameM = "/tmp/ContactManagerMeetings.csv";
         String fileNameC = "/tmp/ContactManagerContacts.csv";
-        ContactManager cmi = ContactManagerImpl.readMeetings(fileNameM, fileNameC);
-        int cid = cmi.addNewContact("Bob","A capital fellow");
-        Set<Contact> contacts = cmi.getContacts(cid);
-        Calendar date = Calendar.getInstance();
-        date.add(Calendar.DATE,1);
-        int mid = cmi.addFutureMeeting(contacts, date);
-        cmi.flush();
-        ContactManager cmiAgain = ContactManagerImpl.readMeetings(fileNameM,fileNameC);
-        Contact bobHope = cmiAgain.getContacts(cid).toArray(new Contact[1])[0];
-        assertEquals("Bob",bobHope.getName());
-        assertEquals("A capital fellow",bobHope.getNotes());
-        FutureMeeting theShow = cmiAgain.getFutureMeeting(mid);
-        Set<Contact> person = theShow.getContacts();
-        Contact fellow = person.toArray(new Contact[1])[0];
-        assertTrue(ContactManagerImpl.compareCalendars(date,theShow.getDate()));
-        assertEquals("Bob",fellow.getName());
-        new File(fileNameC).delete();
-        new File(fileNameM).delete();
+        try {
+            ContactManager cmi = ContactManagerImpl.fromFiles(fileNameM, fileNameC);
+            int cid = cmi.addNewContact("Bob", "A capital fellow");
+            Set<Contact> contacts = cmi.getContacts(cid);
+            Calendar date = Calendar.getInstance();
+            date.add(Calendar.DATE, 1);
+            int mid = cmi.addFutureMeeting(contacts, date);
+            cmi.flush();
+            ContactManager cmiAgain = ContactManagerImpl.fromFiles(fileNameM, fileNameC);
+            Contact bobHope = cmiAgain.getContacts(cid).toArray(new Contact[1])[0];
+            assertEquals("Bob", bobHope.getName());
+            assertEquals("A capital fellow", bobHope.getNotes());
+            FutureMeeting theShow = cmiAgain.getFutureMeeting(mid);
+            Set<Contact> person = theShow.getContacts();
+            Contact fellow = person.toArray(new Contact[1])[0];
+            assertTrue(ContactManagerImpl.sameDate(date, theShow.getDate()));
+            assertEquals("Bob", fellow.getName());
+        } finally {
+            new File(fileNameC).delete();
+            new File(fileNameM).delete();
+        }
+    }
+
+    private static boolean compareContacts(Set<Contact> first, Set<Contact> second) {
+        boolean nameresult = false;
+        boolean notesresult = false;
+        boolean result = false;
+        for (Contact x : first) {
+            int cid = x.getId();
+            for (Contact y : second) {
+                if (y.getId() == cid) {
+                    if (x.getName().equals(y.getName())) {
+                        nameresult = true;
+                    }
+                    if (x.getNotes().equals(y.getNotes())) {
+                        notesresult = true;
+                    }
+                }
+            }
+        }
+        if (nameresult == notesresult) {
+            result = true;
+        }
+        return result;
+
     }
 }

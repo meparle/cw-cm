@@ -3,14 +3,16 @@ package impl;
 import spec.Contact;
 
 /**
- * @author Eileen
+ * Implementation of {@link Contact}.
+ *
+ * @author Eileen Parle
  */
 public class ContactImpl implements Contact {
-    private int id = 0;
-    private String name = "";
+    private final int id ;
+    private final String name;
     private String notes = "";
 
-    public ContactImpl (int id, String name, String notes) {
+    public ContactImpl(int id, String name, String notes) {
         if ((name == null) || (notes == null)) {
             throw new NullPointerException();
         }
@@ -22,7 +24,7 @@ public class ContactImpl implements Contact {
         this.notes = notes;
     }
 
-    public ContactImpl (int id, String name) {
+    public ContactImpl(int id, String name) {
         this(id, name, "");
     }
 
