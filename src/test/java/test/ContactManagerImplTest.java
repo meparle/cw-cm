@@ -4,10 +4,7 @@ import impl.ContactImpl;
 import impl.ContactManagerImpl;
 import impl.FutureMeetingImpl;
 import org.junit.Test;
-import spec.Contact;
-import spec.FutureMeeting;
-import spec.Meeting;
-import spec.PastMeeting;
+import spec.*;
 
 import java.util.Calendar;
 import java.util.HashSet;
@@ -152,21 +149,23 @@ public class ContactManagerImplTest {
     public void test_getFutureMeetingList() {
         ContactManagerImpl cmi = new ContactManagerImpl();
         Calendar cal = Calendar.getInstance();
-        Calendar cal1 = cal;
-        cal1.add(Calendar.MONTH, 1);
-        Calendar cal2 = cal;
+        cal.add(Calendar.MONTH, 1);
+        Calendar cal2 = Calendar.getInstance();
         cal2.add(Calendar.MONTH, 2);
         Set<Contact> contacts;
         int cid = cmi.addNewContact("Walter","A grumpy old man");
-        cmi.addFutureMeeting(cmi.getContacts(cid), cal1);
+        cmi.addFutureMeeting(cmi.getContacts(cid), cal);
         cmi.addFutureMeeting(cmi.getContacts(cid), cal2);
         contacts = cmi.getContacts(cid);
         Contact[] person = contacts.toArray(new Contact[1]);
         List <Meeting> list = cmi.getFutureMeetingList(person[0]);
         assertEquals(2, list.size());
+        assertEquals(cal, list.get(0).getDate());
+        assertEquals(cal2, list.get(1).getDate());
         for (Meeting x : list) {
-            assertTrue(cal1.equals(x.getDate()) || cal2.equals(x.getDate()));
-        } //check date order too!
+            assertTrue(cal.equals(x.getDate()) || cal2.equals(x.getDate()));
+        }
+        assertTrue (list.get(0).getDate().before(list.get(1).getDate()));
     }
 
     @Test
@@ -330,5 +329,25 @@ public class ContactManagerImplTest {
         assertTrue(cmi.compareContacts(actual,expected));
     }
 
-
+    @Test
+    public void test_flush() {
+        String fileNameM = "/Users/eileen/Documents/src/cw-cm/ContactManagerMeetings.csv";
+        String fileNameC = "/Users/eileen/Documents/src/cw-cm/ContactManagerContacts.csv";
+        ContactManager cmi = ContactManagerImpl.readMeetings(fileNameM, fileNameC);
+        int cid = cmi.addNewContact("Bob","A capital fellow");
+        Set<Contact> contacts = cmi.getContacts(cid);
+        Calendar date = Calendar.getInstance();
+        date.add(Calendar.DATE,1);
+        int mid = cmi.addFutureMeeting(contacts, date);
+        cmi.flush();
+        ContactManager cmiAgain = ContactManagerImpl.readMeetings(fileNameM,fileNameC);
+        Contact bobHope = cmiAgain.getContacts(cid).toArray(new Contact[1])[0];
+        assertEquals("Bob",bobHope.getName());
+        assertEquals("A capital fellow",bobHope.getNotes());
+        FutureMeeting theShow = cmiAgain.getFutureMeeting(mid);
+        Set<Contact> person = theShow.getContacts();
+        Contact fellow = person.toArray(new Contact[1])[0];
+        assertTrue(ContactManagerImpl.compareCalendars(date,theShow.getDate()));
+        assertEquals("Bob",fellow.getName());
+    }
 }

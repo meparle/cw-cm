@@ -4,21 +4,25 @@ import spec.*;
 
 import java.io.*;
 import java.text.DateFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
-
-import static java.lang.System.in;
 
 /**
  * Created by eileen on 01/03/2017.
  */
 
 public class ContactManagerImpl implements ContactManager {
+    public static final String SEPARATOR = ";";
+    public static final String SEPARATOR2 = ",";
     private int maxContactId = 0;
     private int maxMeetingId = 0;
     private Set<Contact> contacts = new HashSet<>();
     private Set<PastMeeting> pastMeetings = new TreeSet<>();
     private Set<FutureMeeting> futureMeetings = new TreeSet<>();
+    private String fileNameM = "";
+    private String fileNameC = "";
+    static final DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
 
     private int convertFutureToPast(Meeting meeting) {
         if (meeting.getDate().before(Calendar.getInstance()) && futureMeetings.contains(meeting)) {
@@ -86,7 +90,7 @@ public class ContactManagerImpl implements ContactManager {
         if (contact == null) {
             throw new NullPointerException();
         }
-        Set<Meeting> contactMeetings = new HashSet<>();
+        Set<Meeting> contactMeetings = new TreeSet<>();
         getContacts(contact.getId());
         for (FutureMeeting m : futureMeetings) {
             Set<Contact> meetingContacts = m.getContacts(); //for a past meeting, who was there
@@ -230,37 +234,99 @@ public class ContactManagerImpl implements ContactManager {
     }
 
     public void flush() {
-
+        File m = new File(fileNameM);
+        File c = new File(fileNameC);
+        if (!c.exists()) {
+            try {
+                c.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        PrintWriter out = null;
+        try {
+            out = new PrintWriter(c);
+            for (Contact x : contacts) {
+                out.write(String.valueOf(x.getId()));
+                out.write(SEPARATOR);
+                out.write(x.getName());
+                out.write(SEPARATOR);
+                out.write(x.getNotes());
+                out.write(SEPARATOR);
+                out.println();
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("Cannot write to file " + c + ".");
+        } finally {
+            out.close();
+        }
+        if (!m.exists()) {
+            try {
+                m.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            out = new PrintWriter(m);
+            for (PastMeeting p : pastMeetings) {
+                out.write(String.valueOf(p.getId()));
+                out.write(SEPARATOR);
+                out.write(format.format(p.getDate().getTime()));
+                out.write(SEPARATOR);
+                Set<Contact> attendees = p.getContacts();
+                for (Contact a:attendees) {
+                    out.write(String.valueOf(a.getId()));
+                    out.write(SEPARATOR2);
+                }
+                out.write(SEPARATOR);
+                out.write(p.getNotes());
+                out.write(SEPARATOR);
+                out.println();
+            }
+            for (Meeting f : futureMeetings) {
+                out.write(String.valueOf(f.getId()));
+                out.write(SEPARATOR);
+                out.write(format.format(f.getDate().getTime()));
+                out.write(SEPARATOR);
+                Set<Contact> attendees = f.getContacts();
+                for (Contact a:attendees) {
+                    out.write(String.valueOf(a.getId()));
+                    out.write(SEPARATOR2);
+                }
+                out.write(SEPARATOR);
+                out.write(SEPARATOR);
+                out.println();
+            }
+        } catch (FileNotFoundException ex) {
+            System.out.println("Cannot write to file " + m + ".");
+        } finally {
+            out.close();
+        }
     }
 
-    public void readContacts() {
-        ContactManagerImpl cmi = new ContactManagerImpl();
-        //look for file
-        try {             //to open file
-            File file = new File("/Users/eileen/Documents/src/cw-cm/src/main/ContactManagerContacts.csv");
-            BufferedReader in = new BufferedReader(new FileReader(file));
+    public void readContacts(String fileName) {
+        BufferedReader in = null;
+        File file = new File(fileName);
+        fileNameC = fileName;
+        if (!file.exists()) {
+            return;
+        }
+        try {
+            in = new BufferedReader(new FileReader(file));
             String line;
-            String splitBy = ",";
+            String splitBy = SEPARATOR;
             while ((line = in.readLine()) != null) {        //read from file into each field in Contact Manager Contacts
                 String[] csvContacts = line.split(splitBy);
                 //int id, String name, String notes
                 int cid = Integer.parseInt(csvContacts[0]);
                 String name = csvContacts[1];
                 String notes = csvContacts[2];
-                Calendar cal = Calendar.getInstance();
                 ContactImpl ci = new ContactImpl(cid, name, notes);
                 contacts.add(ci);
-            }
-        } catch (FileNotFoundException ex) {
-            File f = null;
-            f = new File("/Users/eileen/Documents/src/cw-cm/src/main", "ContactManagerContacts.csv");
-            try {
-                f.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
+                maxContactId = cid;
             }
         } catch (IOException ex) {
-            ex.printStackTrace();
         } finally {
             try {
                 if (in != null) {
@@ -273,54 +339,59 @@ public class ContactManagerImpl implements ContactManager {
     }
 
 
-//    public void readMeetings() {
-//        ContactManagerImpl cmi = new ContactManagerImpl();
-//        cmi.readContacts();
-//        //look for file
-//        try {             //to open file
-//            File file = new File("/Users/eileen/Documents/src/cw-cm/src/main/ContactManagerMeetings.csv");
-//            BufferedReader in = new BufferedReader(new FileReader(file));
-//            String line;
-//            String splitBy = ",";
-//            while ((line = in.readLine()) != null) {        //read from file into each field in Contact Manager Meetings using reader
-//                String[] meetings = line.split(splitBy);
-//                //int id, Calendar date, Set<Contact> contacts, String notes
-//                int mid = Integer.parseInt(meetings[0]);
-//                String csvDate = meetings[1];
-//                DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
-//                Date date = format.parse(csvDate);
-//                String csvContacts = meetings[2];
-//                //this is a list of contact IDs as ints, need to look up in Contacts list and add to Set
-//                String notes = meetings[3];
-//                Calendar cal = Calendar.getInstance();
-//                if (date.before(cal)) {
-//                    PastMeetingImpl pmi = new PastMeetingImpl(mid, date, Set <Contact> csvContacts, notes);
-//                    pastMeetings.add(pmi);
-//                } else {
-//                    FutureMeetingImpl fmi = new FutureMeetingImpl(mid, date, Set <Contact> csvContacts);
-//                    futureMeetings.add(fmi);
-//                }
-//            }
-//        }
-//        catch (FileNotFoundException ex) {
-//            File f = null;
-//            System.out.println("File " + f + " does not exist."); //if file does not exist, create file
-//            f = new File("/Users/eileen/Documents/src/cw-cm/src/main", "ContactManagerMeetings.csv");
-//            f.createNewFile();
-//            cmi.readMeetings();
-//        } catch (IOException ex) {
-//            ex.printStackTrace();
-//        }
-//        finally {
-//            try {
-//                if (in != null) {
-//                    in.close();
-//                }
-//            } catch (IOException ex) {
-//                ex.printStackTrace();
-//            }
-//        }
-//    }
+    public static ContactManager readMeetings(String fileNameM, String fileNameC) {
+        ContactManagerImpl cmi = new ContactManagerImpl();
+        cmi.readContacts(fileNameC);
+        File file = new File(fileNameM);
+        cmi.fileNameM = fileNameM;
+        BufferedReader in = null;
+        if (!file.exists()) {
+            return cmi;
+        }
+        try {             //to open file
+            in = new BufferedReader(new FileReader(file));
+            String line;
+            String splitBy = SEPARATOR;
+            while ((line = in.readLine()) != null) {        //read from file into each field in Contact Manager Meetings using reader
+                String[] meetings = line.split(splitBy,4);
+                //int id, Calendar date, Set<Contact> contacts, String notes
+                int mid = Integer.parseInt(meetings[0]);
+                String csvDate = meetings[1];
+                Date date = format.parse(csvDate);
+                Calendar cal = Calendar.getInstance();
+                Calendar now = Calendar.getInstance();
+                cal.setTime(date);
+                String csvContactIDs = meetings[2];
+                String[] IDs = csvContactIDs.split(SEPARATOR2);
+                int[] intIDs = new int[IDs.length];
+                for (int k = 0; k < IDs.length; k++) {
+                    intIDs[k] = Integer.parseInt(IDs[k]);
+                }
+                Set <Contact> contactSet = cmi.getContacts(intIDs);
+                //this is a list of contact IDs as ints, need to look up in Contacts list and add to Set
+                String notes = meetings[3];
+                cmi.maxMeetingId = Math.max(mid, cmi.maxMeetingId);
+                if (cal.before(now)) {
+                    PastMeetingImpl pmi = new PastMeetingImpl(mid, cal, contactSet, notes);
+                    cmi.pastMeetings.add(pmi);
+                } else {
+                    FutureMeetingImpl fmi = new FutureMeetingImpl(mid, cal, contactSet);
+                    cmi.futureMeetings.add(fmi);
+                }
+            }
+        } catch (IOException | ParseException ex) {
+            ex.printStackTrace();
+        } finally {
+            try {
+                if (in != null) {
+                    in.close();
+                }
+            } catch (IOException ex) {
+                ex.printStackTrace();
+            }
+        }
+        return cmi;
+    }
 
     public boolean compareContacts(Set<Contact> first, Set<Contact> second) {
         boolean nameresult = false;
@@ -357,7 +428,7 @@ public class ContactManagerImpl implements ContactManager {
 
     }
 
-    public boolean compareCalendars(Calendar cal1, Calendar cal2) { //to be used in tests
+    public static boolean compareCalendars(Calendar cal1, Calendar cal2) { //to be used in tests
         return cal1.get(Calendar.YEAR) == cal2.get(Calendar.YEAR)
                 && cal1.get(Calendar.MONTH) == cal2.get(Calendar.MONTH)
                 && cal1.get(Calendar.DATE) == cal2.get(Calendar.DATE);
