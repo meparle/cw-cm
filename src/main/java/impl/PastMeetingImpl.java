@@ -3,8 +3,8 @@ package impl;
 import spec.Contact;
 import spec.PastMeeting;
 
-import java.util.Set;
 import java.util.Calendar;
+import java.util.Set;
 
 /**
  * Created by eileen on 01/03/2017.
@@ -28,7 +28,7 @@ public class PastMeetingImpl extends MeetingImpl implements PastMeeting {
         }
     }
 
-    public void addNotes(String newNotes) {
+    void addNotes(String newNotes) {
         if (notes.isEmpty()) {
             notes = newNotes;
         }

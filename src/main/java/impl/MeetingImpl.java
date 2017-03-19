@@ -14,7 +14,7 @@ public abstract class MeetingImpl implements Meeting, Comparable<MeetingImpl> {
     private Calendar date;
     private Set<Contact> contacts;
 
-    public MeetingImpl (int id, Calendar date, Set<Contact> contacts) {
+    MeetingImpl(int id, Calendar date, Set<Contact> contacts) {
         if ((id == 0) || (date == null) || (contacts == null)) { //how to check for contacts set not empty?
             throw new NullPointerException();
         }
@@ -57,9 +57,7 @@ public abstract class MeetingImpl implements Meeting, Comparable<MeetingImpl> {
 
         MeetingImpl meeting = (MeetingImpl) o;
 
-        if (id != meeting.id) return false;
-        if (!date.equals(meeting.date)) return false;
-        return contacts.equals(meeting.contacts);
+        return id == meeting.id && date.equals(meeting.date) && contacts.equals(meeting.contacts);
     }
 
     @Override

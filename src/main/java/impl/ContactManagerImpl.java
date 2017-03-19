@@ -13,8 +13,8 @@ import java.util.*;
  */
 
 public class ContactManagerImpl implements ContactManager {
-    public static final String SEPARATOR = ";";
-    public static final String SEPARATOR2 = ",";
+    private static final String SEPARATOR = ";";
+    private static final String SEPARATOR2 = ",";
     private int maxContactId = 0;
     private int maxMeetingId = 0;
     private Set<Contact> contacts = new HashSet<>();
@@ -22,7 +22,7 @@ public class ContactManagerImpl implements ContactManager {
     private Set<FutureMeeting> futureMeetings = new TreeSet<>();
     private String fileNameM = "";
     private String fileNameC = "";
-    static final DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
+    private static final DateFormat format = new SimpleDateFormat("MMMM d, yyyy", Locale.ENGLISH);
 
     private int convertFutureToPast(Meeting meeting) {
         if (meeting.getDate().before(Calendar.getInstance()) && futureMeetings.contains(meeting)) {
@@ -52,12 +52,14 @@ public class ContactManagerImpl implements ContactManager {
 
     public PastMeeting getPastMeeting(int id) {
         PastMeeting result = null;
+        for (FutureMeeting x : futureMeetings) {
+            if (x.getId() == id) {
+                throw new IllegalStateException();
+            }
+        }
         for (PastMeeting x : pastMeetings) {
             if (x.getId() == id) {
                 result = x;
-            }
-            if (futureMeetings.contains(x)) {
-                throw new IllegalStateException();
             }
         }
         return result;
@@ -65,12 +67,14 @@ public class ContactManagerImpl implements ContactManager {
 
     public FutureMeeting getFutureMeeting(int id) {
         FutureMeeting result = null;
+        for (PastMeeting x : pastMeetings) {
+            if (x.getId() == id) {
+                throw new IllegalStateException();
+            }
+        }
         for (FutureMeeting x : futureMeetings) {
             if (x.getId() == id) {
                 result = x;
-            }
-            if (pastMeetings.contains(x)) {
-                throw new IllegalStateException();
             }
         }
         return result;
@@ -98,8 +102,7 @@ public class ContactManagerImpl implements ContactManager {
                 contactMeetings.add(m);
             }
         }
-        List<Meeting> list = new ArrayList<>(contactMeetings);
-        return list;
+        return new ArrayList<>(contactMeetings);
     }
 
     public List<Meeting> getMeetingListOn(Calendar date) {
@@ -117,8 +120,7 @@ public class ContactManagerImpl implements ContactManager {
                     break;
                 }//stop searching afterwards
             }
-            List<Meeting> list = new ArrayList<>(dateMeetings);
-            return list;
+            return new ArrayList<>(dateMeetings);
             //pull out each PastMeeting & check date for a match until reach desired date
             //once PastMeeting goes beyond desired date, stop searching
         } else {
@@ -130,8 +132,7 @@ public class ContactManagerImpl implements ContactManager {
                     break;
                 }//stop searching afterwards
             }
-            List<Meeting> list = new ArrayList<>(dateMeetings);
-            return list;
+            return new ArrayList<>(dateMeetings);
             //pull out each FutureMeeting & check date for a match until reach desired date
             //once FutureMeeting goes beyond desired date, stop searching
         }
@@ -149,8 +150,7 @@ public class ContactManagerImpl implements ContactManager {
                 contactMeetings.add(m);
             }
         }
-        List<PastMeeting> list = new ArrayList<>(contactMeetings);
-        return list;
+        return new ArrayList<>(contactMeetings);
     }
 
     public int addNewPastMeeting(Set<Contact> contacts, Calendar date, String text) {
@@ -258,7 +258,9 @@ public class ContactManagerImpl implements ContactManager {
         } catch (FileNotFoundException ex) {
             System.out.println("Cannot write to file " + c + ".");
         } finally {
-            out.close();
+            if (out != null) {
+                out.close();
+            }
         }
         if (!m.exists()) {
             try {
@@ -301,11 +303,13 @@ public class ContactManagerImpl implements ContactManager {
         } catch (FileNotFoundException ex) {
             System.out.println("Cannot write to file " + m + ".");
         } finally {
-            out.close();
+            if (out != null) {
+                out.close();
+            }
         }
     }
 
-    public void readContacts(String fileName) {
+    private void readContacts(String fileName) {
         BufferedReader in = null;
         File file = new File(fileName);
         fileNameC = fileName;
@@ -315,9 +319,8 @@ public class ContactManagerImpl implements ContactManager {
         try {
             in = new BufferedReader(new FileReader(file));
             String line;
-            String splitBy = SEPARATOR;
             while ((line = in.readLine()) != null) {        //read from file into each field in Contact Manager Contacts
-                String[] csvContacts = line.split(splitBy);
+                String[] csvContacts = line.split(SEPARATOR,3);
                 //int id, String name, String notes
                 int cid = Integer.parseInt(csvContacts[0]);
                 String name = csvContacts[1];
@@ -327,6 +330,7 @@ public class ContactManagerImpl implements ContactManager {
                 maxContactId = cid;
             }
         } catch (IOException ex) {
+            ex.printStackTrace();
         } finally {
             try {
                 if (in != null) {
@@ -351,9 +355,8 @@ public class ContactManagerImpl implements ContactManager {
         try {             //to open file
             in = new BufferedReader(new FileReader(file));
             String line;
-            String splitBy = SEPARATOR;
             while ((line = in.readLine()) != null) {        //read from file into each field in Contact Manager Meetings using reader
-                String[] meetings = line.split(splitBy,4);
+                String[] meetings = line.split(SEPARATOR,4);
                 //int id, Calendar date, Set<Contact> contacts, String notes
                 int mid = Integer.parseInt(meetings[0]);
                 String csvDate = meetings[1];
@@ -397,14 +400,10 @@ public class ContactManagerImpl implements ContactManager {
         boolean nameresult = false;
         boolean notesresult = false;
         boolean result = false;
-        Contact firstContact;
-        Contact secondContact;
         for (Contact x : first) {
             int cid = x.getId();
             for (Contact y : second) {
                 if (y.getId() == cid) {
-                    secondContact = y;
-                    firstContact = x;
                     if (x.getName().equals(y.getName())) {
                         nameresult = true;
                     }
