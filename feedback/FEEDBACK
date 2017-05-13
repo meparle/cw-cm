@@ -1,1 +1,14 @@
+Please look at the general comments to see if any apply.
 
+Even add javadoc for private fields and methods.
+
+When throwing an exception consider adding a "throws" clause to
+the signature of the method to aid the documentation.
+
+Reasonable set of tests.
+
+Good documentation.
+
+Good coding practice observed.
+
+Very well done. Distinction.
